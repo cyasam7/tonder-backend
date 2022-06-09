@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsMongoId, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDefined,
+  IsMongoId,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
 
 export class DTOCreateRequest {
   @IsString()
@@ -14,5 +20,11 @@ export class DTOCreateRequest {
   @IsNotEmpty()
   @IsMongoId()
   @ApiProperty()
-  userRequesed: string;
+  userRequesed?: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  @IsDefined()
+  @ApiProperty()
+  sent: boolean;
 }

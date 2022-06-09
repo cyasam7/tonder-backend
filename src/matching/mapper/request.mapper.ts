@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IUserBase, UserMapper } from 'src/auth/mappers/user.mapper';
+import { RequestDocument } from '../schema/request';
 
 export interface IRequestBase {
   user: IUserBase;
@@ -10,9 +11,10 @@ export interface IRequestBase {
 export class RequestMapper {
   constructor(private userMapper: UserMapper) {}
 
-  /* mapTo(data: RequestDocument): IRequestBase {
+  mapTo(data: RequestDocument): IRequestBase {
     return {
-      userId: {},
+      user: this.userMapper.mapTo(data.user),
+      userRequesed: this.userMapper.mapTo(data.userRequesed),
     };
-  } */
+  }
 }

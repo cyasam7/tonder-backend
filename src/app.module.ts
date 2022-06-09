@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { enviroments, isDev } from './enviroments';
 import { AuthModule } from './auth/auth.module';
-import { EventsGateway } from './sockets/events.gateway';
 import { config, IEnvConfig, joiSchemaEnv } from './config';
 import { MatchingModule } from './matching/matching.module';
 
@@ -29,6 +28,6 @@ import { MatchingModule } from './matching/matching.module';
     AuthModule,
     MatchingModule,
   ],
-  providers: [EventsGateway, AuthModule],
+  providers: [AuthModule],
 })
 export class AppModule {}

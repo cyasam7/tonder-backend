@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 import { ERoles } from '../../components/decorators/role.decorator';
 
 export type UserDocument = User & Document;
@@ -24,8 +24,11 @@ export class User {
   @Prop()
   phone: string;
 
-  /* @Prop({ required: true })
-  profilePhoto: string; */
+  @Prop({
+    default:
+      'https://res.cloudinary.com/dtvbkgf9w/image/upload/v1654743915/tonder/857ccbec-cambio-personas-conducta-1160x773_sqnyxy.jpg',
+  })
+  profilePhoto: string;
 
   @Prop({ required: true })
   photo: [string];

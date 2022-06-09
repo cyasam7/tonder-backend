@@ -5,6 +5,7 @@ export interface IUserBase {
   name: string;
   phone: string;
   email: string;
+  photo: string;
 }
 
 @Injectable()
@@ -15,6 +16,7 @@ export class UserMapper {
       name: `${data.name} ${data.lastName}`,
       email: data.email,
       phone: data.phone,
+      photo: data.profilePhoto,
     };
   }
 }

@@ -6,21 +6,25 @@ import {
   ConnectedSocket,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { DTOCreateRequest } from './dto/request.dto';
+import { IMatchBase } from './mapper/match.mapper';
+import { RequestService } from './service/request.service';
 
 @WebSocketGateway(81, {
   cors: { origin: '*' },
 })
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  constructor(private requestService: RequestService) {}
+
   @WebSocketServer() server: Server;
 
   handleDisconnect(client: Socket): void {
     console.log('Desconectando: ', client.id);
   }
 
-  handleConnection(client: Socket, ...args: any[]): void {
+  handleConnection(client: Socket): void {
     console.log('Conectando: ', client.id);
   }
 
@@ -29,7 +33,6 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() data: string,
     @ConnectedSocket() socket: Socket,
   ): void {
-    console.log('join', data);
     socket.join(data);
   }
 
@@ -38,5 +41,16 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() { room, message }: { message: string; room: string },
   ): void {
     this.server.to(room).emit('new_message', message.toString());
+  }
+
+  /* Matching */
+  @SubscribeMessage('swipe')
+  async handleSwipeCard(
+    @MessageBody()
+    data: DTOCreateRequest,
+    @ConnectedSocket() socket: Socket,
+  ): Promise<void> {
+    const result = await this.requestService.createRequest(data);
+    socket.emit('swipe', result);
   }
 }

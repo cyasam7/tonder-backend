@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { DTOCreateUser } from '../dto/create-user.dto';
 import { UserDocument } from '../schema/user.schema';
 import { JwtService } from '@nestjs/jwt';
 import { ERoles } from '../../components/decorators/role.decorator';
-import { UserService } from './user.service';
 import { IUserBase, UserMapper } from '../mappers/user.mapper';
 import { IRefreshTokenResponse } from '../types';
 import { UserRepository } from '../repositories/user.repository';
@@ -40,7 +39,9 @@ export class AuthService {
       sub: user._id,
       role: user.role,
     };
-    const token = this.jwtService.sign(payload);
+    const token = this.jwtService.sign(payload, {
+      expiresIn: '15s',
+    });
     const refreshToken = this.jwtService.sign({ sub: user._id });
 
     user.refreshToken = refreshToken;
@@ -58,25 +59,29 @@ export class AuthService {
   async refreshToken(refreshToken: string): Promise<IRefreshTokenResponse> {
     const user = await this.userRepository.findOne({ refreshToken });
 
+    if (!user) {
+      throw new UnauthorizedException('Refresh token no valido');
+    }
+
     const payload: IPayloadToken = {
       sub: user.id,
       role: user.role,
     };
-    const token = this.jwtService.sign(payload);
-    const newRefreshToken = this.jwtService.sign({ sub: user._id });
+    const token = this.jwtService.sign(payload, {
+      expiresIn: '15s',
+    });
 
-    user.refreshToken = newRefreshToken;
     user.accessToken = token;
 
     await user.save();
 
     return {
-      refreshToken: newRefreshToken,
       token,
     };
   }
 
   whoAmI(user: UserDocument): IUserBase {
-    return this.userMapper.mapTo(user);
+    const mappedUser = this.userMapper.mapTo(user);
+    return mappedUser;
   }
 }

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsMongoId, IsString } from 'class-validator';
+import { IsBoolean, IsMongoId, IsString } from 'class-validator';
 
 export class DTOQueryRequest {
   @IsString()
@@ -11,4 +11,7 @@ export class DTOQueryRequest {
   @IsMongoId()
   @ApiProperty()
   userRequesed: string;
+
+  @IsBoolean()
+  sent: boolean;
 }

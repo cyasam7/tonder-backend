@@ -7,7 +7,8 @@ import { DTOCreateMatch } from '../dto/match.dto';
 export class MatchRepository {
   constructor(@InjectModel(Match.name) private matchModel: Model<Match>) {}
   async create(data: DTOCreateMatch): Promise<MatchDocument> {
-    return await this.matchModel.create(data);
+    const match = await this.matchModel.create(data);
+    return await match.populate('users');
   }
   async listByUser(id: string): Promise<MatchDocument[]> {
     return await this.matchModel.find({ users: id }).populate('users').exec();

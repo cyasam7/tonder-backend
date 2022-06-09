@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from 'src/auth/auth.module';
 import { MatchController } from './controller/match.controller';
 import { RequestController } from './controller/request.controller';
+import { EventsGateway } from './events.gateway';
 import { MatchMapper } from './mapper/match.mapper';
 import { RequestMapper } from './mapper/request.mapper';
 import { MatchRepository } from './repository/match.repository';
@@ -22,6 +23,7 @@ import { RequestService } from './service/request.service';
     AuthModule,
   ],
   providers: [
+    EventsGateway,
     MatchRepository,
     RequestRepository,
     MatchService,
