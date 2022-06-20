@@ -20,7 +20,7 @@ export class DTOCreateRequest {
   @IsNotEmpty()
   @IsMongoId()
   @ApiProperty()
-  userRequesed?: string;
+  userRequesed: string;
 
   @IsBoolean()
   @IsNotEmpty()

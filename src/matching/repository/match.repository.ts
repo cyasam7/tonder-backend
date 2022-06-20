@@ -13,6 +13,7 @@ export class MatchRepository {
   async listByUser(id: string): Promise<MatchDocument[]> {
     return await this.matchModel.find({ users: id }).populate('users').exec();
   }
+
   async getOne(query: any): Promise<MatchDocument> {
     return await this.matchModel.findOne(query).populate('users').exec();
   }

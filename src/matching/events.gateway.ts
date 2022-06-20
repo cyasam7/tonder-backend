@@ -48,9 +48,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleSwipeCard(
     @MessageBody()
     data: DTOCreateRequest,
-    @ConnectedSocket() socket: Socket,
-  ): Promise<void> {
-    const result = await this.requestService.createRequest(data);
-    socket.emit('swipe', result);
+  ): Promise<IMatchBase | null> {
+    return await this.requestService.createRequest(data);
   }
 }

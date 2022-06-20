@@ -5,7 +5,7 @@ export class DTOCreateUser {
   @IsString()
   @IsNotEmpty()
   @IsDefined()
-  @ApiProperty()
+  @ApiProperty({ default: 'value' })
   readonly name: string;
   @IsString()
   @IsNotEmpty()

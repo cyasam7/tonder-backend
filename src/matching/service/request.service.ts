@@ -35,6 +35,7 @@ export class RequestService {
     const match = await this.matchRepository.create({
       users: [user, userRequesed],
     });
-    return this.matchMapper.mapTo(match);
+    const matchMapped = this.matchMapper.mapTo(match, user);
+    return matchMapped;
   }
 }

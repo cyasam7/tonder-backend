@@ -26,7 +26,7 @@ export class User {
 
   @Prop({
     default:
-      'https://res.cloudinary.com/dtvbkgf9w/image/upload/v1654743915/tonder/857ccbec-cambio-personas-conducta-1160x773_sqnyxy.jpg',
+      'https://res.cloudinary.com/dtvbkgf9w/image/upload/v1654829463/tonder/Social_Media_Chatting_Online_Blank_Profile_Picture_Head_And_Body_Icon_People_Standing_Icon_Grey_Background_generated_fsjxib.jpg',
   })
   profilePhoto: string;
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User, UserDocument } from '../schema/user.schema';
+import { UserDocument } from '../schema/user.schema';
 export interface IUserBase {
   id: string;
   name: string;
@@ -12,7 +12,7 @@ export interface IUserBase {
 export class UserMapper {
   mapTo(data: UserDocument): IUserBase {
     return {
-      id: data._id,
+      id: data._id.toString(),
       name: `${data.name} ${data.lastName}`,
       email: data.email,
       phone: data.phone,
