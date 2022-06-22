@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MessageDocument } from '../schema/message';
+import * as dfns from 'date-fns';
 
 export interface IMessageBase {
   id: string;
@@ -17,7 +18,7 @@ export class MessageMapper {
       match: data.match._id.toString(),
       user: data.user._id.toString(),
       message: data.message.toString(),
-      time: '',
+      time: dfns.format(data.createdAt, 'HH:mm'),
     };
   }
 }

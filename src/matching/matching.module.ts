@@ -8,6 +8,7 @@ import { EventsGateway } from './events.gateway';
 import { MatchMapper } from './mapper/match.mapper';
 import { MessageMapper } from './mapper/message.mapper';
 import { RequestMapper } from './mapper/request.mapper';
+import { UserMatchedMapper } from './mapper/user-matched.mapper';
 import { MatchRepository } from './repository/match.repository';
 import { MessageRepository } from './repository/message.repository';
 import { RequestRepository } from './repository/request.repository';
@@ -39,6 +40,7 @@ import { RequestService } from './service/request.service';
     MessageRepository,
     MessageService,
     MessageMapper,
+    UserMatchedMapper,
   ],
 })
 export class MatchingModule {}

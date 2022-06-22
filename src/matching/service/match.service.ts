@@ -2,8 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { IUserBase, UserMapper } from 'src/auth/mappers/user.mapper';
 import { UserRepository } from 'src/auth/repositories/user.repository';
 import { IMatchBase, MatchMapper } from '../mapper/match.mapper';
+import {
+  IUserMatchedBase,
+  UserMatchedMapper,
+} from '../mapper/user-matched.mapper';
 import { MatchRepository } from '../repository/match.repository';
 import { MessageRepository } from '../repository/message.repository';
+import { MatchDocument } from '../schema/match';
 
 @Injectable()
 export class MatchService {
@@ -13,6 +18,7 @@ export class MatchService {
     private messageRepository: MessageRepository,
     private userMapper: UserMapper,
     private matchMapper: MatchMapper,
+    private userMatchedMapper: UserMatchedMapper,
   ) {}
 
   async getListByUser(id: string): Promise<IUserBase[]> {
@@ -29,17 +35,45 @@ export class MatchService {
     ]);
     return matchesFiltered.map((user) => this.userMapper.mapTo(user));
   }
-  async getListMatches(id: string): Promise<IMatchBase[]> {
+  async getListMatches(id: string): Promise<IUserMatchedBase[]> {
     const matches = await this.matchRepository.listByUser(id);
-    return matches.map((i) => this.matchMapper.mapTo(i, id));
+    const promises = matches.flatMap(async (match) => {
+      const userOne = await this.messageRepository.existByUser(
+        match.users[0]._id,
+      );
+      const userTwo = await this.messageRepository.existByUser(
+        match.users[1]._id,
+      );
+      return userOne || userTwo ? [] : [match];
+    });
+
+    const matchesfiltered = (await Promise.all(promises)).flat();
+
+    const haveMatches = !!matchesfiltered.length;
+
+    return haveMatches
+      ? matchesfiltered.map((i) => this.userMatchedMapper.mapTo(i, id))
+      : [];
   }
 
-  async getListChatByMatch(id: string): Promise<IMatchBase[]> {
+  async getListChatByMatch(id: string): Promise<IUserMatchedBase[]> {
     const matches = await this.matchRepository.listByUser(id);
-    const promises = matches.flatMap((match) =>
-      this.messageRepository.existByMatchId(match._id) ? [match] : [],
-    );
-    const matchesfiltered = await Promise.all(promises);
-    return matchesfiltered.map((i) => this.matchMapper.mapTo(i, id));
+    const promises = matches.flatMap(async (match) => {
+      const userOne = await this.messageRepository.existByUser(
+        match.users[0]._id,
+      );
+      const userTwo = await this.messageRepository.existByUser(
+        match.users[1]._id,
+      );
+      return userOne || userTwo ? [match] : [];
+    });
+
+    const matchesfiltered = (await Promise.all(promises)).flat();
+
+    const haveMatches = !!matchesfiltered.length;
+
+    return haveMatches
+      ? matchesfiltered.map((i) => this.userMatchedMapper.mapTo(i, id))
+      : [];
   }
 }

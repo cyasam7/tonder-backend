@@ -13,6 +13,8 @@ export class Message {
   user: UserDocument;
   @Prop({ trim: true, required: true })
   message: string;
+
+  createdAt: Date;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);

@@ -1,20 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { IUserBase, UserMapper } from 'src/auth/mappers/user.mapper';
 import { MatchDocument } from '../schema/match';
-
-export interface IMatchBase {
+export interface IUserMatchedBase {
   id: string;
-  users: IUserBase[];
+  user: IUserBase;
 }
 
 @Injectable()
-export class MatchMapper {
+export class UserMatchedMapper {
   constructor(private userMapper: UserMapper) {}
 
-  mapTo(match: MatchDocument): IMatchBase {
+  mapTo(match: MatchDocument, userId: string): IUserMatchedBase {
+    const user = match.users.filter(
+      (user) => user._id.toString() !== userId,
+    )[0];
     return {
       id: match._id.toString(),
-      users: match.users.map((user) => this.userMapper.mapTo(user)),
+      user: this.userMapper.mapTo(user),
     };
   }
 }

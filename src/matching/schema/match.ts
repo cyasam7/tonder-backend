@@ -7,7 +7,7 @@ export type MatchDocument = Match & Document;
 @Schema({ versionKey: false, timestamps: true })
 export class Match {
   @Prop({ type: [Types.ObjectId], ref: User.name })
-  users: [UserDocument];
+  users: [UserDocument, UserDocument];
 }
 
 export const MatchSchema = SchemaFactory.createForClass(Match);

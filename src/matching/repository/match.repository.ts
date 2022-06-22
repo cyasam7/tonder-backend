@@ -17,4 +17,7 @@ export class MatchRepository {
   async getOne(query: any): Promise<MatchDocument> {
     return await this.matchModel.findOne(query).populate('users').exec();
   }
+  async findById(id: string): Promise<MatchDocument> {
+    return await this.matchModel.findById(id).populate('users').exec();
+  }
 }

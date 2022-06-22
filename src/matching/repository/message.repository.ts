@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Message, MessageDocument } from '../schema/Message';
 import { Model } from 'mongoose';
 import { DTOCreateMessage } from '../dto/message.dto';
-import * as mongoose from 'mongoose';
 @Injectable()
 export class MessageRepository {
   constructor(@InjectModel(Message.name) private MessageMode: Model<Message>) {}
@@ -21,11 +20,20 @@ export class MessageRepository {
   }
 
   async listByMatch(id: string): Promise<MessageDocument[]> {
-    return await this.MessageMode.find({ match: id });
+    return await this.MessageMode.find({ match: id })
+      .populate('user')
+      .populate('match')
+      .exec();
   }
   async existByMatchId(id: string): Promise<boolean> {
     const count = await this.MessageMode.count({
       match: id,
+    });
+    return count > 0;
+  }
+  async existByUser(userId: string): Promise<boolean> {
+    const count = await this.MessageMode.count({
+      user: userId.toString(),
     });
     return count > 0;
   }
