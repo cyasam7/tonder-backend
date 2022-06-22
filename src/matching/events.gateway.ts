@@ -38,7 +38,6 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() data: string,
     @ConnectedSocket() socket: Socket,
   ): void {
-    console.log(data);
     socket.join(data);
   }
 
@@ -56,10 +55,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     { room, message }: { message: DTOCreateMessage; room: string },
   ): Promise<void> {
     const newMessage = await this.messageService.create(message);
-    console.log(this.server.sockets.adapter.rooms.get(room));
     this.server.to(room).emit('new_message', newMessage);
-    console.log('room', room);
-    console.log('message', message);
   }
 
   /* Matching */
